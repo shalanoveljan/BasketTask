@@ -14,7 +14,7 @@ function getProducts() {
                 <td>${item.Title}</td>
                 <td>${item.Price} ₼</td>
                 <td>
-                <input id="num" type="number" value=${item.Count}>
+                <input id="num" type="number" value=${item.Count} onclick="updateCount(event,${item.Id})" >
                 </td>
                 <td class="prodprice">${((item.Price) * (item.Count)).toFixed(2)} ₼</td>
                 <td>
@@ -34,6 +34,29 @@ function getProducts() {
 getProducts()
 
 
+
+var items = JSON.parse(localStorage.getItem('products'));
+
+
+const updateCount =(e, id)=>{
+    console.log(e.target.value);
+    let value = e.target.value;
+
+    let products = JSON.parse(localStorage.getItem('products'));
+    
+    products.map((i)=>{
+        if(i.Id == id){
+            i.Count = value;
+        }
+    })
+
+    localStorage.setItem('products',JSON.stringify(products));
+    
+
+
+}
+
+
 function GetReviews(){
     let pr_count=document.querySelector('.pr_count');
     let total_price=document.querySelector('.total_price');
@@ -46,6 +69,7 @@ function GetReviews(){
     total_price.innerHTML=`${sum} ₼`; 
 
     pr_count.innerHTML=items.length;
+    return sum;
 }
 
 GetReviews();
@@ -64,12 +88,10 @@ for(let btn of deleteBtns) {
 }
 
 
-let sum =350;
-let items = JSON.parse(localStorage.getItem('products'));
 function updatePrice(item, quantity) {
     let onnan = item.Price * quantity;
     var index= items.indexOf(item);
-    console.log(item);
+    let sum=GetReviews();
     let prodprice = document.querySelectorAll('.prodprice')[index];
     let total_price = document.querySelector('.total_price');
     prodprice.innerHTML = `${onnan} ₼`;
@@ -80,10 +102,8 @@ function updatePrice(item, quantity) {
 
 for (let item of items) {
     var index= items.indexOf(item);
-    console.log(index);
     let num = document.querySelectorAll('#num')[index];
     num.onchange = function (e) {
-        console.log(e.target)
         updatePrice(item, e.target.value);
     };
 }
