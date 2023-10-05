@@ -39,7 +39,7 @@ var items = JSON.parse(localStorage.getItem('products'));
 
 
 const updateCount =(e, id)=>{
-    console.log(e.target.value);
+  //  console.log(e.target.value);
     let value = e.target.value;
 
     let products = JSON.parse(localStorage.getItem('products'));
@@ -63,6 +63,7 @@ function GetReviews(){
     let items = JSON.parse(localStorage.getItem('products'));
     let sum=0
     for(let item of items) {
+        console.log(sum);
         sum += (item.Count) * (item.Price)
     }
 
@@ -86,25 +87,44 @@ for(let btn of deleteBtns) {
         location.reload()
     }
 }
-
-
+let prewCount;
+let itemCount=1;
+let sum=GetReviews();
 function updatePrice(item, quantity) {
+   // debugger
     let onnan = item.Price * quantity;
     var index= items.indexOf(item);
-    let sum=GetReviews();
+
     let prodprice = document.querySelectorAll('.prodprice')[index];
     let total_price = document.querySelector('.total_price');
     prodprice.innerHTML = `${onnan} ₼`;
+
+    console.log(itemCount);
+    console.log(quantity);
+
+    if(itemCount<=quantity)
+    {sum += +item.Price; 
+    }
+    else {
+        sum-=+item.Price
+        itemCount=quantity
+    }
     
-    sum += ((quantity-(quantity-1)) * item.Price); 
+    console.log(sum);
     total_price.innerHTML = `${sum} ₼`;
+
 }
 
 for (let item of items) {
+    itemCount=1;
     var index= items.indexOf(item);
     let num = document.querySelectorAll('#num')[index];
     num.onchange = function (e) {
+
+        itemCount++;
         updatePrice(item, e.target.value);
+        // itemCount=this.value;
+         //console.log(itemCount);
     };
 }
 
